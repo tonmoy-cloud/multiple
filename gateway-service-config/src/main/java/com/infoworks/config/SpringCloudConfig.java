@@ -49,7 +49,7 @@ public class SpringCloudConfig {
                     .exchange()
                     .block();
 
-            if (response.statusCode() != HttpStatus.UNAUTHORIZED){
+            if (response.statusCode() == HttpStatus.UNAUTHORIZED){
                 throw new RuntimeException("Un-Authorized Access!");
             }
             //
