@@ -48,10 +48,15 @@ public class SpringCloudConfig {
             ClientResponse response = builder.build()
                     .post()
                     .uri("https://auth-service/validateToken?token=" + token)
+                    //OR following
+                    //.uri("https://auth-service/validateToken")
+                    //.header(HttpHeaders.AUTHORIZATION, authHeader)
                     .exchange()
                     .block(Duration.ofMillis(1000));
-
-            if (response.statusCode() == HttpStatus.UNAUTHORIZED){
+            HttpStatus statusCode = response.statusCode();
+            response.bodyToMono(Void.class);
+            //
+            if (statusCode == HttpStatus.UNAUTHORIZED){
                 throw new RuntimeException("Un-Authorized Access!");
             }
             //
