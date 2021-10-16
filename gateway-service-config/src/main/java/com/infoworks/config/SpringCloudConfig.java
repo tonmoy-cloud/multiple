@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -20,6 +21,7 @@ public class SpringCloudConfig {
         return (exchange, chain) -> {
             System.out.println("Pre Global filter");
             return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+                //
                 System.out.println("Post Global filter");
             }));
         };
@@ -39,15 +41,23 @@ public class SpringCloudConfig {
                 throw new RuntimeException("Un-Authorized Access!");
             }
 
-            //TODO:
+            //Make authentication call to Validate-Token-API:
             String token = authHeader.substring("Bearer ".length());
-            builder.build()
-                    .post().uri("http://auth-service/validateToken?token" + token)
-                    .exchange().block();
+            ClientResponse response = builder.build()
+                    .post()
+                    .uri("https://auth-service/validateToken?token" + token)
+                    .exchange()
+                    .block();
 
-            return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+            if (response.statusCode() != HttpStatus.UNAUTHORIZED){
+                throw new RuntimeException("Un-Authorized Access!");
+            }
+            //
+            /*return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+                //
                 System.out.println("Post Auth filter");
-            }));
+            }));*/
+            return chain.filter(exchange);
         };
     }
 
