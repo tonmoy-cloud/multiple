@@ -13,6 +13,8 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+
 @Configuration
 public class SpringCloudConfig {
 
@@ -47,7 +49,7 @@ public class SpringCloudConfig {
                     .post()
                     .uri("https://auth-service/validateToken?token=" + token)
                     .exchange()
-                    .block();
+                    .block(Duration.ofMillis(1000));
 
             if (response.statusCode() == HttpStatus.UNAUTHORIZED){
                 throw new RuntimeException("Un-Authorized Access!");
