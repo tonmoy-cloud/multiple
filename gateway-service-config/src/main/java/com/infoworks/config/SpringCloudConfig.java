@@ -45,7 +45,7 @@ public class SpringCloudConfig {
             String token = authHeader.substring("Bearer ".length());
             ClientResponse response = builder.build()
                     .post()
-                    .uri("https://auth-service/validateToken?token" + token)
+                    .uri("https://auth-service/validateToken?token=" + token)
                     .exchange()
                     .block();
 
