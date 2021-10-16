@@ -53,10 +53,6 @@ public class SpringCloudConfig {
                 throw new RuntimeException("Un-Authorized Access!");
             }
             //
-            /*return chain.filter(exchange).then(Mono.fromRunnable(() -> {
-                //
-                System.out.println("Post Auth filter");
-            }));*/
             return chain.filter(exchange);
         };
     }
