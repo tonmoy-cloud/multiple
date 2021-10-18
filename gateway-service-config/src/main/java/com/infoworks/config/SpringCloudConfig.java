@@ -1,17 +1,32 @@
 package com.infoworks.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Configuration
+@PropertySource("classpath:service-names.properties")
 public class SpringCloudConfig {
+
+    @Value("${app.first.url}")
+    private String firstURL;
+
+    @Value("${app.second.url}")
+    private String secondURL;
+
+    @Value("${app.auth.url}")
+    private String authURL;
+
+    @Value("${app.auth.validation.url}")
+    private String authValidationURL;
 
     @Bean
     public GlobalFilter globalFilter() {
@@ -26,7 +41,7 @@ public class SpringCloudConfig {
 
     @Bean("CustomAuthFilter")
     public GatewayFilter getAuthFilter(@Qualifier("LoadBalancedClientBuilder") WebClient.Builder builder){
-        return AuthFilter.createGatewayFilter(builder);
+        return AuthFilter.createGatewayFilter(builder, authValidationURL);
     }
 
     @Bean
@@ -34,14 +49,14 @@ public class SpringCloudConfig {
                         , @Qualifier("CustomAuthFilter") GatewayFilter authFilter) {
         return builder.routes()
                 .route(r -> r.path("/employee/**")
-                        .uri("http://localhost:8081/")
+                        .uri(firstURL)
                         .filter(authFilter)
                         .id("employeeModule"))
                 .route(r -> r.path("/consumer/**")
-                        .uri("http://localhost:8082/")
+                        .uri(secondURL)
                         .id("consumerModule"))
                 /*.route(r -> r.path("/auth/**")
-                        .uri("http://localhost:8083/")
+                        .uri(authURL)
                         .id("authModule"))*/
                 .build();
     }

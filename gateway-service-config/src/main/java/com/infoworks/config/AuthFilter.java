@@ -1,18 +1,18 @@
 package com.infoworks.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.time.Duration;
-
 @Component
+@PropertySource("classpath:service-names.properties")
 public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> {
 
     private WebClient.Builder builder;
@@ -22,14 +22,17 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
         this.builder = builder;
     }
 
+    @Value("${app.auth.validation.url}")
+    private String authValidationURL;
+
     @Override
     public GatewayFilter apply(Config config) {
-        return createGatewayFilter(builder);
+        return createGatewayFilter(builder, authValidationURL);
     }
 
     public static class Config {}
 
-    public static GatewayFilter createGatewayFilter(WebClient.Builder builder){
+    public static GatewayFilter createGatewayFilter(WebClient.Builder builder, String authValidationURL){
         return (exchange, chain) -> {
             //Checking Authorization Header Attribute:
             if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)){
@@ -46,10 +49,10 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
             String token = authHeader.substring("Bearer ".length());
             Mono<Void> filterChain = builder.build()
                     //.get()
-                    //.uri("http://localhost:8083/auth/validateToken?token=" + token)
+                    //.uri(String.format("%s?token=%s", authValidationURL, token))
                     //OR following
                     .post()
-                    .uri("http://localhost:8083/auth/validateToken")
+                    .uri(authValidationURL)
                     .header(HttpHeaders.AUTHORIZATION, authHeader)
                     .exchange()
                     .map(clientResponse -> {
