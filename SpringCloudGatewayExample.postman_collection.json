@@ -8,10 +8,13 @@
 		{
 			"name": "Gateway/auth/validateToken?token={token}",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/auth/validateToken?token=1122334",
+					"raw": "http://localhost:8080/auth/validateToken?token=w",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -24,7 +27,7 @@
 					"query": [
 						{
 							"key": "token",
-							"value": "1122334"
+							"value": "w"
 						}
 					]
 				}
@@ -39,7 +42,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6ImY1YkJldVJJcXIifQ.eyJpYXQiOjE2MzM0MzQzMzEsIm5iZiI6MTYzMzQzNDMzMSwiZXhwIjoxNjMzNDM5NzMxLCJkYXRhIjp7ImV4cCI6IjQyNjcifX0.cyt4_wyFteVJXivanNmCDQqn6dmlDw4qakf7h1UXGprzuwkMOZYsrV8HraAUe5HjEqXTqIt9bVSKLhYduvXYJw",
+							"value": "ee",
 							"type": "string"
 						}
 					]
@@ -89,7 +92,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6ImY1YkJldVJJcXIifQ.eyJpYXQiOjE2MzM0MzQzMzEsIm5iZiI6MTYzMzQzNDMzMSwiZXhwIjoxNjMzNDM5NzMxLCJkYXRhIjp7ImV4cCI6IjQyNjcifX0.cyt4_wyFteVJXivanNmCDQqn6dmlDw4qakf7h1UXGprzuwkMOZYsrV8HraAUe5HjEqXTqIt9bVSKLhYduvXYJw",
+							"value": "ww",
 							"type": "string"
 						}
 					]
