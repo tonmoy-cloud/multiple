@@ -45,12 +45,12 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
             //Make authentication call to Validate-Token-API:
             String token = authHeader.substring("Bearer ".length());
             Mono<Void> filterChain = builder.build()
-                    .get()
-                    .uri("http://localhost:8083/auth/validateToken?token=" + token)
+                    //.get()
+                    //.uri("http://localhost:8083/auth/validateToken?token=" + token)
                     //OR following
-                    //.post()
-                    //.uri("http://localhost:8083/auth/validateToken")
-                    //.header(HttpHeaders.AUTHORIZATION, authHeader)
+                    .post()
+                    .uri("http://localhost:8083/auth/validateToken")
+                    .header(HttpHeaders.AUTHORIZATION, authHeader)
                     .exchange()
                     .map(clientResponse -> {
                         if (clientResponse.statusCode() == HttpStatus.SERVICE_UNAVAILABLE
