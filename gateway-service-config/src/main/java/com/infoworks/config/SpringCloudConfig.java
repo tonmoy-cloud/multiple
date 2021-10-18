@@ -33,11 +33,13 @@ public class SpringCloudConfig {
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder
                         , @Qualifier("CustomAuthFilter") GatewayFilter authFilter) {
         return builder.routes()
+                .route(r -> r.path("/auth/**")
+                        .uri("http://localhost:8083/")
+                        .id("authModule"))
                 .route(r -> r.path("/employee/**")
                         .uri("http://localhost:8081/")
                         .filter(authFilter)
                         .id("employeeModule"))
-
                 .route(r -> r.path("/consumer/**")
                         .uri("http://localhost:8082/")
                         .id("consumerModule"))

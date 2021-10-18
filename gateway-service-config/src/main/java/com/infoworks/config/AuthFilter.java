@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
@@ -43,22 +44,28 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
 
             //Make authentication call to Validate-Token-API:
             String token = authHeader.substring("Bearer ".length());
-            ClientResponse response = builder.build()
-                    .post()
-                    .uri("https://auth-service/validateToken?token=" + token)
+            Mono<Void> filterChain = builder.build()
+                    .get()
+                    .uri("http://localhost:8083/auth/validateToken?token=" + token)
                     //OR following
-                    //.uri("https://auth-service/validateToken")
+                    //.post()
+                    //.uri("http://localhost:8083/auth/validateToken")
                     //.header(HttpHeaders.AUTHORIZATION, authHeader)
                     .exchange()
-                    .block(Duration.ofMillis(1000));
-            HttpStatus statusCode = response.statusCode();
-            response.bodyToMono(Void.class);
+                    .map(clientResponse -> {
+                        if (clientResponse.statusCode() == HttpStatus.SERVICE_UNAVAILABLE
+                            || clientResponse.statusCode() == HttpStatus.NOT_FOUND
+                            || clientResponse.statusCode() == HttpStatus.BAD_REQUEST
+                            || clientResponse.statusCode() == HttpStatus.INTERNAL_SERVER_ERROR
+                            || clientResponse.statusCode() == HttpStatus.UNAUTHORIZED){
+                            exchange.getResponse()
+                                    .setStatusCode(clientResponse.statusCode());
+                        }
+                        return exchange;
+                    })
+                    .flatMap(webExchange -> chain.filter(webExchange));
             //
-            if (statusCode == HttpStatus.UNAUTHORIZED){
-                throw new RuntimeException("Un-Authorized Access!");
-            }
-            //
-            return chain.filter(exchange);
+            return filterChain;
         };
     }
 

@@ -1,32 +1,68 @@
 {
 	"info": {
-		"_postman_id": "6063e287-1518-4760-9f37-0bcfc21d7069",
+		"_postman_id": "5a31cec8-138c-4921-8306-c4a15d09ded2",
 		"name": "SpringCloudGatewayExample",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "http://localhost:8080/employee/message",
+			"name": "Gateway/auth/validateToken?token={token}",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/employee/message",
+					"raw": "http://localhost:8080/auth/validateToken?token=1122334",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"employee",
-						"message"
+						"auth",
+						"validateToken"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "1122334"
+						}
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "http://localhost:8080/consumer/message",
+			"name": "Gateway/auth/validateToken",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6ImY1YkJldVJJcXIifQ.eyJpYXQiOjE2MzM0MzQzMzEsIm5iZiI6MTYzMzQzNDMzMSwiZXhwIjoxNjMzNDM5NzMxLCJkYXRhIjp7ImV4cCI6IjQyNjcifX0.cyt4_wyFteVJXivanNmCDQqn6dmlDw4qakf7h1UXGprzuwkMOZYsrV8HraAUe5HjEqXTqIt9bVSKLhYduvXYJw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/auth/validateToken",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"validateToken"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Gateway/consumer/message",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -39,6 +75,36 @@
 					"port": "8080",
 					"path": [
 						"consumer",
+						"message"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Gateway/employee/message",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6ImY1YkJldVJJcXIifQ.eyJpYXQiOjE2MzM0MzQzMzEsIm5iZiI6MTYzMzQzNDMzMSwiZXhwIjoxNjMzNDM5NzMxLCJkYXRhIjp7ImV4cCI6IjQyNjcifX0.cyt4_wyFteVJXivanNmCDQqn6dmlDw4qakf7h1UXGprzuwkMOZYsrV8HraAUe5HjEqXTqIt9bVSKLhYduvXYJw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/employee/message",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"employee",
 						"message"
 					]
 				}

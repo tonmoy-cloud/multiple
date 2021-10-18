@@ -13,6 +13,7 @@
         <module>gateway-service-config</module>
         <module>first-service</module>
         <module>second-service</module>
+        <module>auth-service</module>
     </modules>
 
 </project>
