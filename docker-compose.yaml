@@ -1,0 +1,66 @@
+version: '3.5'
+
+networks:
+   web-app-net:
+       name: my-web-app-net
+       #driver: overlay
+       driver: bridge
+
+services:
+   first-webapp:
+      image: first-web-service:1.0
+      build:
+         context: .
+         dockerfile: ./first-service/Dockerfile
+      environment:
+         management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
+      ports:
+         - 8081:8080
+      restart: on-failure
+      networks:
+         - web-app-net
+
+   second-webapp:
+      image: second-web-service:1.0
+      build:
+         context: .
+         dockerfile: ./second-service/Dockerfile
+      environment:
+         management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
+      ports:
+        - 8082:8080
+      restart: on-failure
+      networks:
+        - web-app-net
+
+   auth-webapp:
+      image: auth-web-service:1.0
+      build:
+        context: .
+        dockerfile: ./auth-service/Dockerfile
+      environment:
+        management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
+      ports:
+        - 8083:8080
+      restart: on-failure
+      networks:
+        - web-app-net
+
+   api-gateway:
+      image: api-gateway:1.0
+      build:
+        context: .
+        dockerfile: ./gateway-service-config/Dockerfile
+      environment:
+        management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
+      ports:
+        - 80:8080
+      depends_on:
+        - auth-webapp
+        - second-webapp
+        - first-webapp
+      restart: on-failure
+      networks:
+        - web-app-net
+
+##End of Scripts
