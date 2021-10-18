@@ -14,12 +14,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/auth/validateToken?token=w",
+					"raw": "http://localhost/auth/validateToken?token=w",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
 					"path": [
 						"auth",
 						"validateToken"
@@ -50,12 +49,11 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/auth/validateToken",
+					"raw": "http://localhost/auth/validateToken",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
 					"path": [
 						"auth",
 						"validateToken"
@@ -70,12 +68,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/consumer/message",
+					"raw": "http://localhost/consumer/message",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
 					"path": [
 						"consumer",
 						"message"
@@ -100,12 +97,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/employee/message",
+					"raw": "http://localhost/employee/message",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
 					"path": [
 						"employee",
 						"message"

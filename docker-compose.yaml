@@ -60,7 +60,7 @@ services:
         app.auth.host: auth-webapp
         app.auth.port: 8083
       ports:
-        - 80:8080
+        - 80:80
       depends_on:
         - auth-webapp
         - second-webapp
