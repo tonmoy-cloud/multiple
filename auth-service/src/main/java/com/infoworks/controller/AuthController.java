@@ -11,14 +11,14 @@ public class AuthController {
 
 	@GetMapping("/validateToken")
 	public ResponseEntity<String> validateToken(@RequestParam("token") String token) {
-		if (token == null || token.isEmpty())
+		if (token == null || token.isEmpty() || token.length() <= 5)
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized Access");
 		return ResponseEntity.ok("Hello JavaInUse Called in Auth Service: get::validateToken");
 	}
 
 	@PostMapping("/validateToken")
 	public ResponseEntity<String> validateTokenV2(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-		if (token == null || token.isEmpty())
+		if (token == null || token.isEmpty() || token.length() <= 5)
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized Access");
 		return ResponseEntity.ok("Hello JavaInUse Called in Auth Service: post::validateToken");
 	}
