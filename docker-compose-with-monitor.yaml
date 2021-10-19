@@ -1,0 +1,101 @@
+version: '3.5'
+
+networks:
+   web-app-net:
+       name: my-web-app-net
+       #driver: overlay
+       driver: bridge
+
+services:
+   first-webapp:
+      image: first-web-service:1.0
+      build:
+         context: .
+         dockerfile: ./first-service/Dockerfile
+      environment:
+         management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
+      ports:
+         - 8081
+      restart: on-failure
+      networks:
+         - web-app-net
+
+   second-webapp:
+      image: second-web-service:1.0
+      build:
+         context: .
+         dockerfile: ./second-service/Dockerfile
+      environment:
+         management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
+      ports:
+        - 8082
+      restart: on-failure
+      networks:
+        - web-app-net
+
+   auth-webapp:
+      image: auth-web-service:1.0
+      build:
+        context: .
+        dockerfile: ./auth-service/Dockerfile
+      environment:
+        management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
+      ports:
+        - 8083
+      restart: on-failure
+      networks:
+        - web-app-net
+
+   api-gateway:
+      image: api-gateway:1.0
+      build:
+        context: .
+        dockerfile: ./gateway-service-config/Dockerfile
+      environment:
+        management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
+        app.first.host: first-webapp
+        app.first.port: 8081
+        app.second.host: second-webapp
+        app.second.port: 8082
+        app.auth.host: auth-webapp
+        app.auth.port: 8083
+      ports:
+        - 80:80
+      depends_on:
+        - auth-webapp
+        - second-webapp
+        - first-webapp
+      restart: on-failure
+      networks:
+        - web-app-net
+
+   exporter:
+     image: prom/node-exporter:latest
+     ports:
+       - 9100
+     networks:
+       - web-app-net
+
+   prom:
+     image: prometheus-db:1.0
+     command: "--config.file=/etc/prometheus/prometheus.yaml --storage.tsdb.path=/prometheus"
+     build:
+       context: .
+       dockerfile: ./monitoring/Dockerfile-embedded
+     ports:
+       - 9090:9090
+     depends_on:
+       - exporter
+     networks:
+       - web-app-net
+
+   grafana:
+     image: grafana/grafana
+     ports:
+       - 3000:3000
+     depends_on:
+       - prom
+     networks:
+       - web-app-net
+
+##End of Scripts
