@@ -37,13 +37,19 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
         return (exchange, chain) -> {
             //Checking Authorization Header Attribute:
             if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)){
-                throw new RuntimeException("Un-Authorized Access!");
+                //Kick-out from here:
+                ServerHttpResponse response = exchange.getResponse();
+                response.setStatusCode(HttpStatus.UNAUTHORIZED);
+                return response.setComplete();
             }
 
             String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
             if (authHeader == null
                     || authHeader.isEmpty() || !authHeader.startsWith("Bearer")){
-                throw new RuntimeException("Un-Authorized Access!");
+                //Kick-out from here:
+                ServerHttpResponse response = exchange.getResponse();
+                response.setStatusCode(HttpStatus.UNAUTHORIZED);
+                return response.setComplete();
             }
 
             //Make authentication call to Validate-Token-API:
