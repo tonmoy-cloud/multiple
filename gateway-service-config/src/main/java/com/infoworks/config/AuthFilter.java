@@ -7,6 +7,7 @@ import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFac
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -55,18 +56,21 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                     .uri(authValidationURL)
                     .header(HttpHeaders.AUTHORIZATION, authHeader)
                     .exchange()
-                    .map(clientResponse -> {
+                    .flatMap(clientResponse -> {
                         if (clientResponse.statusCode() == HttpStatus.SERVICE_UNAVAILABLE
                             || clientResponse.statusCode() == HttpStatus.NOT_FOUND
                             || clientResponse.statusCode() == HttpStatus.BAD_REQUEST
                             || clientResponse.statusCode() == HttpStatus.INTERNAL_SERVER_ERROR
                             || clientResponse.statusCode() == HttpStatus.UNAUTHORIZED){
-                            exchange.getResponse()
-                                    .setStatusCode(clientResponse.statusCode());
+                            //Kick-out from here:
+                            ServerHttpResponse response = exchange.getResponse();
+                            response.setStatusCode(clientResponse.statusCode());
+                            return response.setComplete();
+                        } else {
+                            //Passing down the stream:
+                            return chain.filter(exchange);
                         }
-                        return exchange;
-                    })
-                    .flatMap(webExchange -> chain.filter(webExchange));
+                    });
             //
             return filterChain;
         };
