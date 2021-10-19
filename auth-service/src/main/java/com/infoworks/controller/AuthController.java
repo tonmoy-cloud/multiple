@@ -11,15 +11,15 @@ public class AuthController {
 
 	@GetMapping("/validateToken")
 	public ResponseEntity<String> validateToken(@RequestParam("token") String token) {
-		if (token == null || token.isEmpty() || token.length() <= 5)
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized Access");
+		if (token == null || token.isEmpty() || token.length() <= 10)
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized Access: Length is less than 11");
 		return ResponseEntity.ok("Hello JavaInUse Called in Auth Service: get::validateToken");
 	}
 
 	@PostMapping("/validateToken")
 	public ResponseEntity<String> validateTokenV2(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-		if (token == null || token.isEmpty() || token.length() <= 5)
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized Access");
+		if (token == null || token.isEmpty() || token.length() <= 10)
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized Access: Length is less than 11");
 		return ResponseEntity.ok("Hello JavaInUse Called in Auth Service: post::validateToken");
 	}
 }
