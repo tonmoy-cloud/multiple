@@ -48,16 +48,16 @@ public class SpringCloudConfig {
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder
                         , @Qualifier("CustomAuthFilter") GatewayFilter authFilter) {
         return builder.routes()
-                .route(r -> r.path("/employee/**")
-                        .uri(firstURL)
-                        .filter(authFilter)
-                        .id("employeeModule"))
-                .route(r -> r.path("/consumer/**")
-                        .uri(secondURL)
-                        .id("consumerModule"))
-                /*.route(r -> r.path("/auth/**")
-                        .uri(authURL)
-                        .id("authModule"))*/
+                .route("employeeModule"
+                        , r -> r.path("/employee/**")
+                            .uri(firstURL)
+                            .filter(authFilter))
+                .route("consumerModule"
+                        , r -> r.path("/consumer/**")
+                            .uri(secondURL))
+                /*.route("authModule"
+                        , r -> r.path("/auth/**")
+                            .uri(authURL))*/
                 .build();
     }
 
