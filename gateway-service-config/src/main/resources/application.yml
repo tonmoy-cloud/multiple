@@ -4,4 +4,4 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,metrics,httptrace,prometheus
+        include: health,metrics,httptrace,prometheus,gateway
