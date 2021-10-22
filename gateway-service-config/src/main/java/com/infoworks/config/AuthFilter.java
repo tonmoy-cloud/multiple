@@ -40,7 +40,8 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                 //Kick-out from here:
                 ServerHttpResponse response = exchange.getResponse();
                 response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                return response.setComplete();
+                //return response.setComplete();
+                return Mono.error(new RuntimeException("Unauthorized Access!"));
             }
 
             String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
@@ -49,7 +50,8 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                 //Kick-out from here:
                 ServerHttpResponse response = exchange.getResponse();
                 response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                return response.setComplete();
+                //return response.setComplete();
+                return Mono.error(new RuntimeException("Unauthorized Access!"));
             }
 
             //Make authentication call to Validate-Token-API:
@@ -71,7 +73,8 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                             //Kick-out from here:
                             ServerHttpResponse response = exchange.getResponse();
                             response.setStatusCode(clientResponse.statusCode());
-                            return response.setComplete();
+                            //return response.setComplete();
+                            return Mono.error(new RuntimeException("Unauthorized Access!"));
                         } else {
                             //Passing down the stream:
                             return chain.filter(exchange);
