@@ -44,6 +44,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
 	<repositories>
 		<repository>
 			<id>spring-milestones</id>
@@ -51,6 +52,7 @@
 			<url>https://repo.spring.io/milestone</url>
 		</repository>
 	</repositories>
+
 	<build>
 		<plugins>
 			<plugin>
