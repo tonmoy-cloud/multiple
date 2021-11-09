@@ -10,7 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import java.net.URI;
 
 @Component
 @PropertySource("classpath:service-names.properties")
@@ -38,20 +41,14 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
             //Checking Authorization Header Attribute:
             if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)){
                 //Kick-out from here:
-                ServerHttpResponse response = exchange.getResponse();
-                response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                //return response.setComplete();
-                return Mono.error(new RuntimeException("Unauthorized Access!"));
+                return unauthorizedAccessHandler(exchange, HttpStatus.UNAUTHORIZED);
             }
 
             String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
             if (authHeader == null
                     || authHeader.isEmpty() || !authHeader.startsWith("Bearer")){
                 //Kick-out from here:
-                ServerHttpResponse response = exchange.getResponse();
-                response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                //return response.setComplete();
-                return Mono.error(new RuntimeException("Unauthorized Access!"));
+                return unauthorizedAccessHandler(exchange, HttpStatus.UNAUTHORIZED);
             }
 
             //Make authentication call to Validate-Token-API:
@@ -71,10 +68,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                             || clientResponse.statusCode() == HttpStatus.INTERNAL_SERVER_ERROR
                             || clientResponse.statusCode() == HttpStatus.UNAUTHORIZED){
                             //Kick-out from here:
-                            ServerHttpResponse response = exchange.getResponse();
-                            response.setStatusCode(clientResponse.statusCode());
-                            //return response.setComplete();
-                            return Mono.error(new RuntimeException("Unauthorized Access!"));
+                            return unauthorizedAccessHandler(exchange, clientResponse.statusCode());
                         } else {
                             //Passing down the stream:
                             return chain.filter(exchange);
@@ -83,6 +77,13 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
             //
             return filterChain;
         };
+    }
+
+    private static Mono<Void> unauthorizedAccessHandler(ServerWebExchange exchange, HttpStatus status){
+        ServerHttpResponse response = exchange.getResponse();
+        response.setStatusCode(status);
+        response.getHeaders().setLocation(URI.create("/error/unauthorized.html"));
+        return response.setComplete();
     }
 
 }

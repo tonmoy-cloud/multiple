@@ -50,8 +50,8 @@ public class SpringCloudConfig {
         return builder.routes()
                 .route("employeeModule"
                         , r -> r.path("/employee/**")
-                            .uri(firstURL)
-                            .filter(authFilter))
+                            .filters(f -> f.filter(authFilter))
+                            .uri(firstURL))
                 .route("consumerModule"
                         , r -> r.path("/consumer/**")
                             .uri(secondURL))
