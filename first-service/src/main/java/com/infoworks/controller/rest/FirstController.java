@@ -1,4 +1,4 @@
-package com.infoworks.controller;
+package com.infoworks.controller.rest;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,8 +20,8 @@ public class FirstController {
 	}
 
 	@GetMapping("/error/throw/{throw}")
-	public String ErrorException(@PathVariable("throw") boolean should){
-		if (should) throw new RuntimeException("Thrown from /error/...");
+	public String errorException(@PathVariable("throw") boolean shouldThrow){
+		if (shouldThrow) throw new RuntimeException("Thrown from /error/...");
 		return "No message has been thrown";
 	}
 
