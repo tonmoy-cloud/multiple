@@ -1,10 +1,12 @@
 package com.infoworks.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -80,9 +82,23 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
     }
 
     private static Mono<Void> unauthorizedAccessHandler(ServerWebExchange exchange, HttpStatus status){
+        return unauthorizedAccessHandler(exchange, status, "Un-Authorized Access!");
+    }
+
+    private static Mono<Void> unauthorizedAccessHandler(ServerWebExchange exchange, HttpStatus status, Object body) {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(status);
         response.getHeaders().setLocation(URI.create("/error/unauthorized.html"));
+        //
+        if (body != null){
+            DataBufferFactory dataBufferFactory = exchange.getResponse().bufferFactory();
+            ObjectMapper objMapper = new ObjectMapper();
+            try {
+                byte[] obj = objMapper.writeValueAsBytes(body);
+                return response.writeWith(Mono.just(obj).map(r -> dataBufferFactory.wrap(r)));
+            } catch (Exception e) {}
+        }
+        //
         return response.setComplete();
     }
 
