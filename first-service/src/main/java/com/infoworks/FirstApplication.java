@@ -20,10 +20,10 @@ public class FirstApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		String value = "me-wow";
-		LOGGER.trace("doStuff needed more information - {}", value);
-		LOGGER.debug("doStuff needed to debug - {}", value);
-		LOGGER.info("doStuff took input - {}", value);
-		LOGGER.warn("doStuff needed to warn - {}", value);
 		LOGGER.error("doStuff encountered an error with value - {}", value);
+		LOGGER.warn("doStuff needed to warn - {}", value);
+		LOGGER.info("doStuff took input - {}", value);
+		LOGGER.debug("doStuff needed to debug - {}", value);
+		LOGGER.trace("doStuff needed more information - {}", value);
 	}
 }

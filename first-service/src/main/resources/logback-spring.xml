@@ -29,7 +29,7 @@
         </encoder>
     </appender>
     <!-- -->
-    <logger name="com.infoworks" level="INFO"/> <!-- INFO DEBUG ERROR WARNING OFF -->
+    <logger name="com.infoworks" level="INFO"/> <!-- OFF ERROR WARN INFO DEBUG TRACE -->
     <!-- -->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
