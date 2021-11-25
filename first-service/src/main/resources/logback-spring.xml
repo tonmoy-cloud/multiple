@@ -29,6 +29,8 @@
         </encoder>
     </appender>
     <!-- -->
+    <logger name="com.infoworks" level="INFO"/> <!-- INFO DEBUG ERROR WARNING OFF -->
+    <!-- -->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
