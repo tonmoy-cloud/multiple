@@ -7,20 +7,20 @@ networks:
     driver: bridge
 
 services:
-  first-webapp:
-    image: first-web-service:1.0
-    build:
-      context: .
-      dockerfile: ./first-service/Dockerfile
-    environment:
-      management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
-    ports:
-      - 8081:8081
-    labels:
-      collect_logs_with_filebeat: "true"
-      decode_log_event_to_json_object: "true"
-    networks:
-      - web-app-net
+#  first-webapp:
+#    image: first-web-service:1.0
+#    build:
+#      context: .
+#      dockerfile: ./first-service/Dockerfile
+#    environment:
+#      management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
+#    ports:
+#      - 8081
+#    labels:
+#      collect_logs_with_filebeat: "true"
+#      decode_log_event_to_json_object: "true"
+#    networks:
+#      - web-app-net
 
 #  second-webapp:
 #    image: second-web-service:1.0
@@ -31,6 +31,9 @@ services:
 #      management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
 #    ports:
 #      - 8082
+#    labels:
+#      collect_logs_with_filebeat: "true"
+#      decode_log_event_to_json_object: "true"
 #    networks:
 #      - web-app-net
 
@@ -43,30 +46,36 @@ services:
 #      management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
 #    ports:
 #      - 8083
+#    labels:
+#      collect_logs_with_filebeat: "true"
+#      decode_log_event_to_json_object: "true"
 #    networks:
 #      - web-app-net
 
-#  api-gateway:
-#    image: api-gateway:1.0
-#    build:
-#      context: .
-#      dockerfile: ./gateway-service-config/Dockerfile
-#    environment:
-#      management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus,gateway
-#      app.first.host: first-webapp
-#      app.first.port: 8081
-#      app.second.host: second-webapp
-#      app.second.port: 8082
-#      app.auth.host: auth-webapp
-#      app.auth.port: 8083
-#    ports:
-#      - 80:80
+  api-gateway:
+    image: api-gateway:1.0
+    build:
+      context: .
+      dockerfile: ./gateway-service-config/Dockerfile
+    environment:
+      management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus,gateway
+      app.first.host: first-webapp
+      app.first.port: 8081
+      app.second.host: second-webapp
+      app.second.port: 8082
+      app.auth.host: auth-webapp
+      app.auth.port: 8083
+    ports:
+      - 80:80
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
 #    depends_on:
 #      - auth-webapp
 #      - second-webapp
 #      - first-webapp
-#    networks:
-#      - web-app-net
+    networks:
+      - web-app-net
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0

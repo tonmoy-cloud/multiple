@@ -1,6 +1,8 @@
 spring:
   application:
     name: second-service
+  main:
+    banner-mode: "off"
 server:
   port: 8082
 management:
