@@ -12,6 +12,46 @@
         </encoder>
     </appender>
     <!-- -->
+    <appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+                <version/>
+                <logLevel/>
+                <message/>
+                <loggerName/>
+                <threadName/>
+                <context/>
+                <pattern>
+                    <omitEmptyFields>true</omitEmptyFields>
+                    <pattern>
+                        {
+                        "trace": {
+                        "trace_id": "%mdc{X-B3-TraceId}",
+                        "span_id": "%mdc{X-B3-SpanId}",
+                        "parent_span_id": "%mdc{X-B3-ParentSpanId}",
+                        "exportable": "%mdc{X-Span-Export}"
+                        }
+                        }
+                    </pattern>
+                </pattern>
+                <mdc>
+                    <excludeMdcKeyName>traceId</excludeMdcKeyName>
+                    <excludeMdcKeyName>spanId</excludeMdcKeyName>
+                    <excludeMdcKeyName>parentId</excludeMdcKeyName>
+                    <excludeMdcKeyName>spanExportable</excludeMdcKeyName>
+                    <excludeMdcKeyName>X-B3-TraceId</excludeMdcKeyName>
+                    <excludeMdcKeyName>X-B3-SpanId</excludeMdcKeyName>
+                    <excludeMdcKeyName>X-B3-ParentSpanId</excludeMdcKeyName>
+                    <excludeMdcKeyName>X-Span-Export</excludeMdcKeyName>
+                </mdc>
+                <stackTrace/>
+            </providers>
+        </encoder>
+    </appender>
+    <!-- -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>/home/${USER}/logs/${USER}-${HOSTNAME}-${INSTANCE_NAME}.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -33,7 +73,7 @@
     <logger name="com.infoworks" level="INFO"/>
     <!-- -->
     <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="jsonConsoleAppender"/>
         <appender-ref ref="FILE"/>
     </root>
     <!-- -->
