@@ -13,9 +13,6 @@ services:
          management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
       ports:
          - 8081
-      labels:
-        collect_logs_with_filebeat: "true"
-        decode_log_event_to_json_object: "true"
       deploy:
         replicas: 1
         update_config:
