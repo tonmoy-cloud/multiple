@@ -3,15 +3,12 @@ version: '3.5'
 networks:
    web-app-net:
        name: my-web-app-net
-       #driver: overlay
-       driver: bridge
+       driver: overlay
+       #driver: bridge
 
 services:
    first-webapp:
       image: first-web-service:1.0
-      build:
-         context: .
-         dockerfile: ./first-service/Dockerfile
       environment:
          management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
       ports:
@@ -35,9 +32,6 @@ services:
 
    second-webapp:
       image: second-web-service:1.0
-      build:
-         context: .
-         dockerfile: ./second-service/Dockerfile
       environment:
          management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
       ports:
@@ -61,9 +55,6 @@ services:
 
    auth-webapp:
       image: auth-web-service:1.0
-      build:
-        context: .
-        dockerfile: ./auth-service/Dockerfile
       environment:
         management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
       ports:
@@ -87,9 +78,6 @@ services:
 
    api-gateway:
       image: api-gateway:1.0
-      build:
-        context: .
-        dockerfile: ./gateway-service-config/Dockerfile
       environment:
         management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus,gateway
         app.first.host: first-webapp
