@@ -3,15 +3,12 @@ version: '3.5'
 networks:
    web-app-net:
        name: my-web-app-net
-       #driver: overlay
-       driver: bridge
+       driver: overlay
+       #driver: bridge
 
 services:
    first-webapp:
       image: first-web-service:1.0
-      build:
-         context: .
-         dockerfile: ./first-service/Dockerfile
       environment:
          management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
       ports:
@@ -19,38 +16,62 @@ services:
       labels:
         collect_logs_with_filebeat: "true"
         decode_log_event_to_json_object: "true"
+      deploy:
+        replicas: 1
+        update_config:
+          parallelism: 1
+          delay: 5s
+        restart_policy:
+          condition: on-failure
+        placement:
+          constraints:
+            - node.role == worker
+            - node.labels.worker-node-01 == yes
       networks:
          - web-app-net
 
    second-webapp:
       image: second-web-service:1.0
-      build:
-         context: .
-         dockerfile: ./second-service/Dockerfile
       environment:
          management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
       ports:
         - 8082
+      deploy:
+        replicas: 1
+        update_config:
+          parallelism: 1
+          delay: 5s
+        restart_policy:
+          condition: on-failure
+        placement:
+          constraints:
+            - node.role == worker
+            - node.labels.worker-node-01 == yes
       networks:
         - web-app-net
 
    auth-webapp:
       image: auth-web-service:1.0
-      build:
-        context: .
-        dockerfile: ./auth-service/Dockerfile
       environment:
         management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
       ports:
         - 8083
+      deploy:
+        replicas: 1
+        update_config:
+          parallelism: 1
+          delay: 5s
+        restart_policy:
+          condition: on-failure
+        placement:
+          constraints:
+            - node.role == worker
+            - node.labels.worker-node-01 == yes
       networks:
         - web-app-net
 
    api-gateway:
       image: api-gateway:1.0
-      build:
-        context: .
-        dockerfile: ./gateway-service-config/Dockerfile
       environment:
         management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus,gateway
         app.first.host: first-webapp
@@ -65,6 +86,17 @@ services:
         - auth-webapp
         - second-webapp
         - first-webapp
+      deploy:
+        replicas: 1
+        update_config:
+          parallelism: 1
+          delay: 5s
+        restart_policy:
+          condition: on-failure
+        placement:
+          constraints:
+            - node.role == manager
+            - node.labels.manager-node-01 == yes
       networks:
         - web-app-net
 
@@ -72,6 +104,17 @@ services:
      image: prom/node-exporter:latest
      ports:
        - 9100
+     deploy:
+       replicas: 1
+       update_config:
+         parallelism: 1
+         delay: 5s
+       restart_policy:
+         condition: on-failure
+       placement:
+         constraints:
+           - node.role == worker
+           - node.labels.monitor-node-01 == yes
      networks:
        - web-app-net
 
@@ -85,6 +128,17 @@ services:
        - 9090:9090
      depends_on:
        - exporter
+     deploy:
+       replicas: 1
+       update_config:
+         parallelism: 1
+         delay: 5s
+       restart_policy:
+         condition: on-failure
+       placement:
+         constraints:
+           - node.role == worker
+           - node.labels.monitor-node-01 == yes
      networks:
        - web-app-net
 
@@ -94,6 +148,17 @@ services:
 #       - 3000:3000
 #     depends_on:
 #       - prom
+#     deploy:
+#       replicas: 1
+#       update_config:
+#         parallelism: 1
+#         delay: 5s
+#       restart_policy:
+#         condition: on-failure
+#       placement:
+#         constraints:
+#           - node.role == worker
+#           - node.labels.monitor-node-01 == yes
 #     networks:
 #       - web-app-net
 
@@ -105,6 +170,17 @@ services:
        - "discovery.type=single-node"
      volumes:
        - ./elkstack/elasticsearch/data:/usr/share/elasticsearch/data:rw              # Persistence data
+     deploy:
+       replicas: 1
+       update_config:
+         parallelism: 1
+         delay: 5s
+       restart_policy:
+         condition: on-failure
+       placement:
+         constraints:
+           - node.role == worker
+           - node.labels.elk-node-01 == yes
      networks:
        - web-app-net
 
@@ -118,6 +194,17 @@ services:
      restart: on-failure
      depends_on:
        - elasticsearch
+     deploy:
+       replicas: 1
+       update_config:
+         parallelism: 1
+         delay: 5s
+       restart_policy:
+         condition: on-failure
+       placement:
+         constraints:
+           - node.role == worker
+           - node.labels.elk-node-01 == yes
      networks:
        - web-app-net
 
@@ -128,6 +215,17 @@ services:
      restart: on-failure
      depends_on:
        - elasticsearch
+     deploy:
+       replicas: 1
+       update_config:
+         parallelism: 1
+         delay: 5s
+       restart_policy:
+         condition: on-failure
+       placement:
+         constraints:
+           - node.role == worker
+           - node.labels.elk-node-01 == yes
      networks:
        - web-app-net
 
@@ -143,6 +241,17 @@ services:
      restart: on-failure
      depends_on:
        - logstash
+     deploy:
+       replicas: 1
+       update_config:
+         parallelism: 1
+         delay: 5s
+       restart_policy:
+         condition: on-failure
+       placement:
+         constraints:
+           - node.role == worker
+           - node.labels.elk-node-01 == yes
      networks:
        - web-app-net
 

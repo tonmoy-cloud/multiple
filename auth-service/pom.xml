@@ -30,6 +30,7 @@
 			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
 	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
