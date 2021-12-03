@@ -1,6 +1,8 @@
 spring:
   application:
     name: first-service
+  main:
+    banner-mode: "off"
 server:
   port: 8081
 management:
