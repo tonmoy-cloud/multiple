@@ -1,8 +1,6 @@
 spring:
   application:
     name: api-gateway
-  main:
-    banner-mode: "off"
 server:
   port: 80
 management:

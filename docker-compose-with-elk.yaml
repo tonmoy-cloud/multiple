@@ -7,50 +7,44 @@ networks:
     driver: bridge
 
 services:
-#  first-webapp:
-#    image: first-web-service:1.0
-#    build:
-#      context: .
-#      dockerfile: ./first-service/Dockerfile
-#    environment:
-#      management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
-#    ports:
-#      - 8081
-#    labels:
-#      collect_logs_with_filebeat: "true"
-#      decode_log_event_to_json_object: "true"
-#    networks:
-#      - web-app-net
+  first-webapp:
+    image: first-web-service:1.0
+    build:
+      context: .
+      dockerfile: ./first-service/Dockerfile
+    environment:
+      management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
+    ports:
+      - 8081
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
+    networks:
+      - web-app-net
 
-#  second-webapp:
-#    image: second-web-service:1.0
-#    build:
-#      context: .
-#      dockerfile: ./second-service/Dockerfile
-#    environment:
-#      management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
-#    ports:
-#      - 8082
-#    labels:
-#      collect_logs_with_filebeat: "true"
-#      decode_log_event_to_json_object: "true"
-#    networks:
-#      - web-app-net
+  second-webapp:
+    image: second-web-service:1.0
+    build:
+      context: .
+      dockerfile: ./second-service/Dockerfile
+    environment:
+      management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
+    ports:
+      - 8082
+    networks:
+      - web-app-net
 
-#  auth-webapp:
-#    image: auth-web-service:1.0
-#    build:
-#      context: .
-#      dockerfile: ./auth-service/Dockerfile
-#    environment:
-#      management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
-#    ports:
-#      - 8083
-#    labels:
-#      collect_logs_with_filebeat: "true"
-#      decode_log_event_to_json_object: "true"
-#    networks:
-#      - web-app-net
+  auth-webapp:
+    image: auth-web-service:1.0
+    build:
+      context: .
+      dockerfile: ./auth-service/Dockerfile
+    environment:
+      management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
+    ports:
+      - 8083
+    networks:
+      - web-app-net
 
   api-gateway:
     image: api-gateway:1.0
@@ -67,13 +61,10 @@ services:
       app.auth.port: 8083
     ports:
       - 80:80
-    labels:
-      collect_logs_with_filebeat: "true"
-      decode_log_event_to_json_object: "true"
-#    depends_on:
-#      - auth-webapp
-#      - second-webapp
-#      - first-webapp
+    depends_on:
+      - first-webapp
+      - second-webapp
+      - auth-webapp
     networks:
       - web-app-net
 

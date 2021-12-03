@@ -31,9 +31,6 @@ services:
          management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
       ports:
         - 8082
-      labels:
-        collect_logs_with_filebeat: "true"
-        decode_log_event_to_json_object: "true"
       networks:
         - web-app-net
 
@@ -46,9 +43,6 @@ services:
         management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
       ports:
         - 8083
-      labels:
-        collect_logs_with_filebeat: "true"
-        decode_log_event_to_json_object: "true"
       networks:
         - web-app-net
 
@@ -67,9 +61,6 @@ services:
         app.auth.port: 8083
       ports:
         - 80:80
-      labels:
-        collect_logs_with_filebeat: "true"
-        decode_log_event_to_json_object: "true"
       depends_on:
         - auth-webapp
         - second-webapp
