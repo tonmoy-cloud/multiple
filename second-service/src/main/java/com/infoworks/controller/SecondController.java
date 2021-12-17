@@ -3,7 +3,7 @@ package com.infoworks.controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/consumer")
+@RequestMapping("/v1")
 public class SecondController {
 
     @GetMapping("/message")

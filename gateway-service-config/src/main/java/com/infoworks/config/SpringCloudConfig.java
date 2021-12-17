@@ -49,14 +49,14 @@ public class SpringCloudConfig {
                         , @Qualifier("CustomAuthFilter") GatewayFilter authFilter) {
         return builder.routes()
                 .route("employeeModule"
-                        , r -> r.path("/employee/**")
+                        , r -> r.path("/api/employee/**")
                             .filters(f -> f.filter(authFilter))
                             .uri(firstURL))
                 .route("consumerModule"
-                        , r -> r.path("/consumer/**")
+                        , r -> r.path("/api/consumer/**")
                             .uri(secondURL))
                 /*.route("authModule"
-                        , r -> r.path("/auth/**")
+                        , r -> r.path("/api/auth/**")
                             .uri(authURL))*/
                 .build();
     }

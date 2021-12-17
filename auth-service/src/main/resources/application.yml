@@ -3,6 +3,8 @@ spring:
     name: auth-service
 server:
   port: 8083
+  servlet:
+    context-path: /api/auth
 management:
   endpoints:
     web:

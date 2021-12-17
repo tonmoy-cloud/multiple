@@ -3,6 +3,8 @@ spring:
     name: second-service
 server:
   port: 8082
+  servlet:
+    context-path: /api/consumer
 management:
   endpoints:
     web:

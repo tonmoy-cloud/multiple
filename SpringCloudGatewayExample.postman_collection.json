@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5a31cec8-138c-4921-8306-c4a15d09ded2",
+		"_postman_id": "7a9abef2-9a38-4b87-94a8-80a265a8ba34",
 		"name": "SpringCloudGatewayExample",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -14,13 +14,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost/auth/validateToken?token=w",
+					"raw": "http://localhost/api/auth/v1/validateToken?token=w",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"path": [
+						"api",
 						"auth",
+						"v1",
 						"validateToken"
 					],
 					"query": [
@@ -49,13 +51,15 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost/auth/validateToken",
+					"raw": "http://localhost/api/auth/v1/validateToken",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"path": [
+						"api",
 						"auth",
+						"v1",
 						"validateToken"
 					]
 				}
@@ -68,13 +72,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost/consumer/message",
+					"raw": "http://localhost/api/consumer/v1/message",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"path": [
+						"api",
 						"consumer",
+						"v1",
 						"message"
 					]
 				}
@@ -89,7 +95,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "ww",
+							"value": "wwww",
 							"type": "string"
 						}
 					]
@@ -97,13 +103,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost/employee/message",
+					"raw": "http://localhost/api/employee/v1/message",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"path": [
+						"api",
 						"employee",
+						"v1",
 						"message"
 					]
 				}
