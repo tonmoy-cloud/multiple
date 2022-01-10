@@ -11,3 +11,6 @@ docker image build -f auth-service/Dockerfile-self -t auth-web-service:1.0 ./aut
 
 echo 'Creating Gateway-Service Image'
 docker image build -f gateway-service-config/Dockerfile-self -t gateway-service:1.0 ./gateway-service-config/
+
+echo 'Creating Monitoring Image'
+docker image build -f monitoring/Dockerfile -t prometheus-db:1.0 ./monitoring/
