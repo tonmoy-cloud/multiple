@@ -40,7 +40,7 @@ public class SpringCloudConfig {
     }
 
     @Bean("CustomAuthFilter")
-    public GatewayFilter getAuthFilter(@Qualifier("LoadBalancedClientBuilder") WebClient.Builder builder){
+    public GatewayFilter getAuthFilter(WebClient.Builder builder){
         return AuthFilter.createGatewayFilter(builder, authValidationURL);
     }
 
