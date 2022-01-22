@@ -1,7 +1,6 @@
 package com.infoworks.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -23,7 +22,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
 
     private WebClient.Builder builder;
 
-    public AuthFilter(@Qualifier("LoadBalancedClientBuilder") WebClient.Builder builder) {
+    public AuthFilter(WebClient.Builder builder) {
         super(Config.class);
         this.builder = builder;
     }
