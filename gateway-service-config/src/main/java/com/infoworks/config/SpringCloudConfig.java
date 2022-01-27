@@ -9,6 +9,8 @@ import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigB
 import org.springframework.cloud.client.circuitbreaker.Customizer;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
+import org.springframework.cloud.gateway.filter.ratelimit.RedisRateLimiter;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -53,8 +55,17 @@ public class SpringCloudConfig {
 
     @Bean
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder
-                        , @Qualifier("CustomAuthFilter") GatewayFilter authFilter) {
+                        , @Qualifier("CustomAuthFilter") GatewayFilter authFilter
+                        , RedisRateLimiter rateLimiter) {
         return builder.routes()
+                .route("employeeModuleRateLimit"
+                        , r -> r.path("/api/employee/v1/rateLimit/**")
+                                .filters(f -> {
+                                    //Code breakdown for readability:
+                                    return f.requestRateLimiter()
+                                            .configure(c -> c.setRateLimiter(rateLimiter));
+                                })
+                                .uri(firstURL))
                 .route("employeeModuleDelayed"
                         , r -> r.path("/api/employee/v1/delayed/**")
                                 .filters(f -> {
@@ -89,6 +100,23 @@ public class SpringCloudConfig {
                             .build())
                     .build();
         });
+    }
+
+    @Bean
+    public RedisRateLimiter redisRateLimiter(){
+        /**
+         * defaultReplenishRate: Default number of request an user can do in a second without dropping any request.
+         * defaultBurstCapacity: Maximum number of request an user allowed to do in a second.
+         */
+        return new RedisRateLimiter(2, 3);
+    }
+
+    @Bean
+    public KeyResolver userKeyResolver(){
+        /**
+         * RedisRateLimiter need a KeyResolver, without this limiter will not work.
+         */
+        return exchange -> Mono.just("rate-limiter-key");
     }
 
 }

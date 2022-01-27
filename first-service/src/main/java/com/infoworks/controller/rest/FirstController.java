@@ -20,6 +20,11 @@ public class FirstController {
 		return "Hello JavaInUse Called First Service in 5Sec Delay";
 	}
 
+	@GetMapping("/rateLimit/message")
+	public String testRateLimit() throws InterruptedException {
+		return "Hello JavaInUse Called First Service to test RateLimit!";
+	}
+
 	@GetMapping("/error/{args}")
 	public String errorMessage(@PathVariable("args") Integer args){
 		return "Argument provided properly";
