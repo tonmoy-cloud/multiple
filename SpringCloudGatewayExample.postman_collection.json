@@ -1,73 +1,12 @@
 {
 	"info": {
-		"_postman_id": "7a9abef2-9a38-4b87-94a8-80a265a8ba34",
+		"_postman_id": "6063e287-1518-4760-9f37-0bcfc21d7069",
 		"name": "SpringCloudGatewayExample",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Gateway/auth/validateToken?token={token}",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost/api/auth/v1/validateToken?token=w",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"path": [
-						"api",
-						"auth",
-						"v1",
-						"validateToken"
-					],
-					"query": [
-						{
-							"key": "token",
-							"value": "w"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Gateway/auth/validateToken",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "ee",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "http://localhost/api/auth/v1/validateToken",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"path": [
-						"api",
-						"auth",
-						"v1",
-						"validateToken"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Gateway/consumer/message",
+			"name": "http://localhost/api/consumer/v1/message",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -88,14 +27,14 @@
 			"response": []
 		},
 		{
-			"name": "Gateway/employee/message",
+			"name": "http://localhost/api/employee/v1/message",
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "wwww",
+							"value": "ssss",
 							"type": "string"
 						}
 					]
@@ -112,6 +51,60 @@
 						"api",
 						"employee",
 						"v1",
+						"message"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost/api/employee/v1/delayed/message",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "ssss",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/api/employee/v1/delayed/message",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"employee",
+						"v1",
+						"delayed",
+						"message"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost/api/employee/v1/rateLimit/message",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/api/employee/v1/rateLimit/message",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"employee",
+						"v1",
+						"rateLimit",
 						"message"
 					]
 				}
