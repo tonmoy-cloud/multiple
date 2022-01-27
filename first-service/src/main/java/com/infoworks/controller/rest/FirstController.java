@@ -14,6 +14,12 @@ public class FirstController {
 		return "Hello JavaInUse Called in First Service";
 	}
 
+	@GetMapping("/delayed/message")
+	public String testDelay() throws InterruptedException {
+		Thread.sleep(5000);
+		return "Hello JavaInUse Called First Service in 5Sec Delay";
+	}
+
 	@GetMapping("/error/{args}")
 	public String errorMessage(@PathVariable("args") Integer args){
 		return "Argument provided properly";
@@ -23,6 +29,11 @@ public class FirstController {
 	public String errorException(@PathVariable("throw") boolean shouldThrow){
 		if (shouldThrow) throw new RuntimeException("Thrown from /error/...");
 		return "No message has been thrown";
+	}
+
+	@GetMapping("/errorFallback")
+	public String errorFallback() {
+		return "Unfortunately api not reachable at this moment!";
 	}
 
 }

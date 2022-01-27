@@ -1,7 +1,12 @@
 package com.infoworks.config;
 
+import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
+import io.github.resilience4j.timelimiter.TimeLimiterConfig;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.circuitbreaker.resilience4j.ReactiveResilience4JCircuitBreakerFactory;
+import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder;
+import org.springframework.cloud.client.circuitbreaker.Customizer;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.route.RouteLocator;
@@ -11,6 +16,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.time.Duration;
 
 @Configuration
 @PropertySource("classpath:service-names.properties")
@@ -33,7 +40,7 @@ public class SpringCloudConfig {
         return (exchange, chain) -> {
             System.out.println("Pre Global filter");
             return chain.filter(exchange).then(Mono.fromRunnable(() -> {
-                //
+                //TODO:
                 System.out.println("Post Global filter");
             }));
         };
@@ -48,8 +55,17 @@ public class SpringCloudConfig {
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder
                         , @Qualifier("CustomAuthFilter") GatewayFilter authFilter) {
         return builder.routes()
+                .route("employeeModuleDelayed"
+                        , r -> r.path("/api/employee/v1/delayed/**")
+                                .filters(f -> {
+                                    //Code breakdown for readability:
+                                    return f.filter(authFilter)
+                                            .circuitBreaker(c -> c.setName("delayedCircuit")
+                                                    .setFallbackUri("/api/employee/v1/errorFallback"));
+                                })
+                                .uri(firstURL))
                 .route("employeeModule"
-                        , r -> r.path("/api/employee/**")
+                        , r -> r.path("/api/employee/v1/**")
                             .filters(f -> f.filter(authFilter))
                             .uri(firstURL))
                 .route("consumerModule"
@@ -59,6 +75,20 @@ public class SpringCloudConfig {
                         , r -> r.path("/api/auth/**")
                             .uri(authURL))*/
                 .build();
+    }
+
+    @Bean
+    public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCircuitBreakerFactory() {
+        return (factory) -> factory.configureDefault(id -> {
+            //Code breakdown for readability:
+            Duration timeout = Duration.ofMillis(2100); //For testing replace with 5100ms.
+            return new Resilience4JConfigBuilder(id)
+                    .circuitBreakerConfig(CircuitBreakerConfig.ofDefaults())
+                    .timeLimiterConfig(TimeLimiterConfig.custom()
+                            .timeoutDuration(timeout)
+                            .build())
+                    .build();
+        });
     }
 
 }
