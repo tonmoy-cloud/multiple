@@ -5,6 +5,7 @@ DockerHubUser="mydev"
 DockerHubRepoName="my-apps"
 DockerHubRepository="${DockerHubUser}/${DockerHubRepoName}"
 #
+docker login --password my-secret-pass --username ${DockerHubUser}
 ###
 FirstServiceName="first-service"
 echo "Creating ${FirstServiceName} Image"
