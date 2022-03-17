@@ -11,6 +11,7 @@ services:
       image: first-web-service:1.0
       environment:
          management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
+         app.home.logs: /home/logs
       ports:
          - 8081
       labels:

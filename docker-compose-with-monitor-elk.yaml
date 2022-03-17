@@ -14,6 +14,7 @@ services:
          dockerfile: ./first-service/Dockerfile
       environment:
          management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
+         app.home.logs: /home/logs
       ports:
          - 8081
       labels:

@@ -71,8 +71,10 @@ public class SpringCloudConfig {
                                 .filters(f -> {
                                     //Code breakdown for readability:
                                     return f.filter(authFilter)
-                                            .circuitBreaker(c -> c.setName("delayedCircuit")
+                                            .circuitBreaker(c -> c.setName("id-employee-circuit")
                                                     .setFallbackUri("/api/employee/v1/errorFallback"));
+                                                    //OR Generic messages:
+                                                    //.setFallbackUri("/api/fallback/messages/unreachable"));
                                 })
                                 .uri(firstURL))
                 .route("employeeModule"
