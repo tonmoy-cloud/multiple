@@ -14,7 +14,4 @@ management:
         include: health,metrics,httptrace,prometheus
 app:
   home:
-    #upload: /home/${USER}/Downloads
-    upload: /Users/${USER}/Downloads
-    #logs: /home/${USER}/Logs
     logs: /Users/${USER}/Logs
