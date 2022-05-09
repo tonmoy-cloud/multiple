@@ -36,6 +36,14 @@ docker image tag ${GatewayServiceName}:${AppVersion} ${DockerHubRepository}:${Ga
 docker push ${DockerHubRepository}:${GatewayServiceName}-${AppVersion}
 #
 ###
+EurekaServiceDir="eureka-service-discovery"
+EurekaServiceName="discovery-service"
+echo "Creating ${EurekaServiceName} Image"
+docker image build -f ${EurekaServiceDir}/Dockerfile -t ${EurekaServiceName}:${AppVersion} .
+docker image tag ${EurekaServiceName}:${AppVersion} ${DockerHubRepository}:${EurekaServiceName}-${AppVersion}
+docker push ${DockerHubRepository}:${EurekaServiceName}-${AppVersion}
+#
+###
 MonitoringServiceDir="monitoring"
 MonitoringServiceName="prometheus-db"
 echo "Creating ${MonitoringService} Image"

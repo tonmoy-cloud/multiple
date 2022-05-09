@@ -12,3 +12,8 @@ management:
 redis:
   host: localhost
   port: 6379
+#Eureka-Config:
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:801/eureka

@@ -43,6 +43,13 @@ scrape_configs:
     static_configs:
       - targets: ['api-gateway:80']
 
+  - job_name: 'eureka-discovery-service'
+      metrics_path: '/actuator/prometheus'
+      scrape_interval: 5s
+      #localhost || machine-ip || aws-public-dns:port
+      static_configs:
+        - targets: ['discovery-service:801']
+
   - job_name: 'auth-service'
     metrics_path: '/api/auth/actuator/prometheus'
     scrape_interval: 15s

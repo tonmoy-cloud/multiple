@@ -10,4 +10,9 @@ management:
     web:
       exposure:
         include: health,metrics,httptrace,prometheus
+#Eureka-Config:
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:801/eureka
 

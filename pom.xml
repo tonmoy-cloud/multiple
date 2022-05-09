@@ -14,6 +14,7 @@
         <module>first-service</module>
         <module>second-service</module>
         <module>auth-service</module>
+        <module>eureka-service-discovery</module>
     </modules>
 
 </project>

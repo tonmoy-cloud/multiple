@@ -72,4 +72,17 @@ services:
       networks:
         - web-app-net
 
+   discovery-service:
+     image: discovery-service:1.0
+       build:
+         context: .
+         dockerfile: ./eureka-service-discovery/Dockerfile
+       environment:
+         management.endpoints.web.exposure.include: health,metrics,httptrace,prometheus
+       ports:
+         - 801:8080
+       restart: on-failure
+       networks:
+         - web-app-net
+
 ##End of Scripts

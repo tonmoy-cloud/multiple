@@ -1,10 +1,8 @@
 spring:
   application:
-    name: second-service
+    name: discovery-service
 server:
-  port: 8082
-  servlet:
-    context-path: /api/consumer
+  port: 801
 management:
   endpoints:
     web:
@@ -13,5 +11,7 @@ management:
 #Eureka-Config:
 eureka:
   client:
-    serviceUrl:
+    registerWithEureka: false
+    fetchRegistry: false
+    service-url:
       defaultZone: http://localhost:801/eureka
