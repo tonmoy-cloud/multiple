@@ -50,7 +50,7 @@ public class SpringCloudConfig {
 
     @Bean("CustomAuthFilter")
     public GatewayFilter getAuthFilter(WebClient.Builder builder){
-        return AuthFilter.createGatewayFilter(builder, authValidationURL);
+        return AuthFilter.createGatewayFilter(builder, new AuthFilter.Config(authValidationURL));
     }
 
     @Bean
