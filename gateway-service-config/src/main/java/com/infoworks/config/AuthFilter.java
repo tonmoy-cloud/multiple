@@ -1,7 +1,6 @@
 package com.infoworks.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.context.annotation.PropertySource;
@@ -27,17 +26,20 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
         this.builder = builder;
     }
 
-    @Value("${app.auth.validation.url}")
-    private String authValidationURL;
-
     @Override
     public GatewayFilter apply(Config config) {
-        return createGatewayFilter(builder, authValidationURL);
+        return createGatewayFilter(builder, config);
     }
 
-    public static class Config {}
+    public static class Config {
+        private String authValidationURL;
 
-    public static GatewayFilter createGatewayFilter(WebClient.Builder builder, String authValidationURL){
+        public Config(String authValidationURL) {
+            this.authValidationURL = authValidationURL;
+        }
+    }
+
+    public static GatewayFilter createGatewayFilter(WebClient.Builder builder, Config config){
         return (exchange, chain) -> {
             //Checking Authorization Header Attribute:
             if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)){
@@ -59,15 +61,11 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                     //.uri(String.format("%s?token=%s", authValidationURL, token))
                     //OR following
                     .post()
-                    .uri(authValidationURL)
+                    .uri(config.authValidationURL)
                     .header(HttpHeaders.AUTHORIZATION, authHeader)
                     .exchange()
                     .flatMap(clientResponse -> {
-                        if (clientResponse.statusCode() == HttpStatus.SERVICE_UNAVAILABLE
-                            || clientResponse.statusCode() == HttpStatus.NOT_FOUND
-                            || clientResponse.statusCode() == HttpStatus.BAD_REQUEST
-                            || clientResponse.statusCode() == HttpStatus.INTERNAL_SERVER_ERROR
-                            || clientResponse.statusCode() == HttpStatus.UNAUTHORIZED){
+                        if (clientResponse.statusCode().value() >= HttpStatus.BAD_REQUEST.value()){
                             //Kick-out from here:
                             return unauthorizedAccessHandler(exchange, clientResponse.statusCode());
                         } else {
