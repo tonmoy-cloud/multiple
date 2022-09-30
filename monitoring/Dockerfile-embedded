@@ -1,2 +1,0 @@
-FROM prom/prometheus
-ADD monitoring/prometheus.yaml /etc/prometheus/
